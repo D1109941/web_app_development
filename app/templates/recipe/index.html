@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Search Banner -->
+<div class="glass-panel py-5 px-4 mb-5 text-center position-relative overflow-hidden border-0">
+    <!-- Decor particles -->
+    <div class="position-absolute rounded-circle shadow-lg" style="width: 300px; height: 300px; background: rgba(99, 102, 241, 0.2); filter: blur(40px); top: -100px; left: -100px; pointer-events: none;"></div>
+    <div class="position-absolute rounded-circle shadow-lg" style="width: 250px; height: 250px; background: rgba(236, 72, 153, 0.2); filter: blur(50px); bottom: -50px; right: -50px; pointer-events: none;"></div>
+    
+    <div class="position-relative z-index-1 py-4">
+        <h1 class="display-5 fw-bold mb-3 text-white">尋找你的下一道美味料理</h1>
+        <p class="fs-5 text-muted mb-4 opacity-75">上百種嚴選食譜，讓你輕鬆化身大廚</p>
+        <form method="GET" action="{{ url_for('recipe.index') }}" class="d-flex justify-content-center mx-auto" style="max-width: 550px;">
+            <div class="input-group input-group-lg shadow rounded-pill overflow-hidden border border-secondary" style="background: rgba(15,23,42,0.8);">
+                <input type="text" name="q" class="form-control border-0 bg-transparent text-white px-4 fs-6 py-3" placeholder="搜尋菜名或分類 (例如：義大利麵、沙拉)..." value="{{ keyword or '' }}">
+                <button class="btn btn-primary px-4 border-0 d-flex align-items-center" type="submit"><i class="fa-solid fa-magnifying-glass me-2"></i>搜尋</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0"><i class="fa-solid fa-book-open text-primary me-2"></i>精選食譜</h3>
+    <span class="text-muted small">{{ recipes|length }} 道結果</span>
+</div>
+
+<!-- Grid -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for recipe in recipes %}
+    <div class="col">
+        <a href="{{ url_for('recipe.detail', id=recipe.id) }}" class="text-decoration-none h-100 d-block">
+            <div class="card h-100 glass-panel recipe-card border-0 rounded-4">
+                <!-- Image placeholder area for aesthetics -->
+                <div class="card-img-top w-100" style="height: 160px; background: linear-gradient(45deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.3)); border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                    <div class="w-100 h-100 d-flex justify-content-center align-items-center opacity-50">
+                        <i class="fa-solid fa-utensils fs-1 text-white"></i>
+                    </div>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge rounded-pill badge-category py-1 px-3 fs-xs shadow-sm">{{ recipe.category or '未分類' }}</span>
+                    </div>
+                    <h4 class="card-title fw-bold mt-2 mb-2 text-white">{{ recipe.title }}</h4>
+                    <p class="card-text text-muted small flex-grow-1 lh-base">{{ recipe.description|truncate(70, True, '...') if recipe.description else '暫無簡介' }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary">
+                        <span class="text-muted small"><i class="fa-regular fa-clock me-1"></i>料理時間</span>
+                        <span class="text-primary small fw-bold">查看詳情 <i class="fa-solid fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% else %}
+    <div class="col-12 py-5 text-center">
+        <div class="glass-panel d-inline-block p-5 text-muted rounded-4">
+            <i class="fa-solid fa-magnifying-glass fs-1 mb-3 opacity-50"></i>
+            <h4>找不到相關食譜</h4>
+            <p>請嘗試使用其他關鍵字搜尋，或讓管理員新增更多料理！</p>
+            <a href="{{ url_for('recipe.index') }}" class="btn btn-outline-light mt-2 rounded-pill px-4">清除搜尋</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

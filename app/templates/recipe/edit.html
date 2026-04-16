@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold"><i class="fa-solid fa-pen-to-square text-primary me-2"></i>編輯食譜：{{ recipe.title }}</h2>
+            <a href="{{ url_for('recipe.detail', id=recipe.id) }}" class="btn btn-outline-secondary rounded-pill btn-sm px-3">取消編輯</a>
+        </div>
+        
+        <form method="POST" action="{{ url_for('recipe.edit_recipe', id=recipe.id) }}" class="glass-panel p-4 p-md-5 rounded-4 shadow-sm">
+            <div class="row g-4">
+                <!-- 基本資訊 -->
+                <div class="col-md-6 border-end border-secondary pe-md-4">
+                    <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-file-lines text-secondary me-2"></i>基本資訊</h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">食譜名稱 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="title" value="{{ recipe.title }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">料理分類</label>
+                        <input type="text" class="form-control" name="category" value="{{ recipe.category }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">簡介描述</label>
+                        <textarea class="form-control" name="description" rows="3">{{ recipe.description }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold">烹飪步驟說明</label>
+                        <textarea class="form-control" name="instructions" rows="7">{{ recipe.instructions }}</textarea>
+                    </div>
+                </div>
+
+                <!-- 食材清單編輯 -->
+                <div class="col-md-6 ps-md-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold text-white mb-0"><i class="fa-solid fa-basket-shopping text-warning me-2"></i>食材清單</h5>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="addIngredientRow">
+                            <i class="fa-solid fa-plus me-1"></i>新增一列
+                        </button>
+                    </div>
+                    
+                    <div class="bg-dark bg-opacity-25 rounded-3 p-3 mb-3 border border-secondary" style="min-height: 250px;">
+                        <div id="ingredientsContainer">
+                            {% for ing in ingredients %}
+                            <div class="row g-3 mb-2 row-ingredient align-items-center">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" name="ingredient_name[]" value="{{ ing.name }}" required>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" name="ingredient_amount[]" value="{{ ing.amount }}" required>
+                                </div>
+                                <div class="col-2 text-end">
+                                    <button type="button" class="btn btn-outline-danger btn-sm rounded-circle px-2 remove-ing-btn border-0"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            </div>
+                            {% else %}
+                            <!-- Empty row if no previous ingredients -->
+                            <div class="row g-3 mb-2 row-ingredient align-items-center">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" name="ingredient_name[]" placeholder="食材名稱 (例: 牛肉)">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" name="ingredient_amount[]" placeholder="份量 (例: 300g)">
+                                </div>
+                                <div class="col-2 text-end">
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-4">
+            <div class="text-end d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary btn-lg rounded-3 px-5 shadow"><i class="fa-solid fa-floppy-disk me-2"></i> 儲存變更</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

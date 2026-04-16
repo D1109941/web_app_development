@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold"><i class="fa-solid fa-feather-pointed text-primary me-2"></i>撰寫新食譜</h2>
+            <a href="{{ url_for('recipe.index') }}" class="btn btn-outline-secondary rounded-pill btn-sm px-3"><i class="fa-solid fa-arrow-left me-1"></i>返回列表</a>
+        </div>
+        
+        <form method="POST" action="{{ url_for('recipe.new_recipe') }}" class="glass-panel p-4 p-md-5 rounded-4 shadow-sm">
+            <div class="row g-4">
+                <!-- 基本資訊 -->
+                <div class="col-md-6 border-end border-secondary pe-md-4">
+                    <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-file-lines text-secondary me-2"></i>基本資訊</h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">食譜名稱 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="title" required placeholder="例如：義式經典肉醬麵">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">料理分類</label>
+                        <input type="text" class="form-control" name="category" placeholder="例如：義式料理, 家常菜">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">簡介描述</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="用簡短的一兩句話形容這道菜的魅力"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold">烹飪步驟說明</label>
+                        <textarea class="form-control" name="instructions" rows="7" placeholder="1. 步驟一...&#n;2. 步驟二..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 食材清單建立 -->
+                <div class="col-md-6 ps-md-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold text-white mb-0"><i class="fa-solid fa-basket-shopping text-warning me-2"></i>食材清單</h5>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="addIngredientRow">
+                            <i class="fa-solid fa-plus me-1"></i>新增一列
+                        </button>
+                    </div>
+                    
+                    <div class="bg-dark bg-opacity-25 rounded-3 p-3 mb-3 border border-secondary" style="min-height: 250px;">
+                        <div id="ingredientsContainer">
+                            <!-- Input Rows Inject Here by JS -->
+                            <div class="row g-3 mb-2 row-ingredient align-items-center">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" name="ingredient_name[]" placeholder="食材名稱 (例: 牛肉)" required>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" name="ingredient_amount[]" placeholder="份量 (例: 300g)" required>
+                                </div>
+                                <div class="col-2 text-end">
+                                    <!-- 第一列不可刪除，留空或可刪 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info py-2 small glass-alert border-0 bg-primary bg-opacity-10 text-main mt-4 rounded-3 d-flex align-items-start">
+                        <i class="fa-solid fa-circle-info mt-1 me-2 text-primary"></i>
+                        <span>這份食材清單將會在前台給使用者一鍵加入「準備清單」作為採買依據。請盡量寫清楚份量單位。</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-4">
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary btn-lg rounded-3 px-5 shadow"><i class="fa-solid fa-check me-2"></i> 發布食譜</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

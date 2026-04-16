@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9 col-lg-8">
+        
+        <div class="glass-panel p-4 p-md-5 rounded-4 shadow border-0 position-relative">
+            <div class="position-absolute top-0 end-0 p-4 opacity-25">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 8rem; right: -20px; top: -20px; position:absolute; z-index:-1;"></i>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-end mb-5 position-relative z-index-1 border-bottom border-secondary pb-3">
+                <div>
+                    <h2 class="fw-bold text-white mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>採買準備清單</h2>
+                    <p class="text-muted mb-0">勾選已經買到或準備好的食材</p>
+                </div>
+            </div>
+
+            <div class="checklist-container position-relative z-index-1">
+                {% if items %}
+                <ul class="list-group list-group-flush gap-2">
+                    {% for item in items %}
+                    <li class="list-group-item bg-dark bg-opacity-50 border border-secondary rounded-3 p-3 transition-hover d-flex align-items-center justify-content-between">
+                        <div class="form-check form-check-lg m-0 d-flex align-items-center w-100">
+                            <!-- Input -->
+                            <input class="form-check-input checklist-toggle shadow-none fs-4 mt-0" type="checkbox" data-id="{{ item.id }}" id="chk_{{ item.id }}" {% if item.is_checked %}checked{% endif %}>
+                            <!-- Dynamic Label -->
+                            <label class="form-check-label ps-3 w-100 d-flex justify-content-between align-items-center flex-grow-1" for="chk_{{ item.id }}" style="cursor:pointer; {% if item.is_checked %}text-decoration: line-through; opacity: 0.5;{% endif %}">
+                                <span class="fs-5 fw-medium text-white">{{ item.name }}</span>
+                                <span class="badge bg-light bg-opacity-25 text-white rounded-pill px-3 py-2 border border-secondary shadow-sm">{{ item.amount }}</span>
+                            </label>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                
+                <div class="alert alert-glass border-primary mt-5 mb-0 d-flex align-items-center">
+                    <i class="fa-solid fa-lightbulb text-warning fs-3 me-3"></i>
+                    <div>
+                        <strong class="text-white">小提醒：</strong> 打勾的項目會即時儲存。當你下次從食譜按「加入準備清單」時，新材料會追加在列表底部。
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-5 my-4">
+                    <div class="bg-dark bg-opacity-50 rounded-circle d-inline-flex justify-content-center align-items-center mb-4" style="width: 80px; height: 80px;">
+                        <i class="fa-solid fa-basket-shopping fs-2 text-muted"></i>
+                    </div>
+                    <h5 class="text-white fw-bold mb-2">清單目前是空的</h5>
+                    <p class="text-muted mb-4">你在食譜頁面點擊「加入準備清單」後，項目就會出現在這裡。</p>
+                    <a href="{{ url_for('recipe.index') }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">去找想做的食譜</a>
+                </div>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

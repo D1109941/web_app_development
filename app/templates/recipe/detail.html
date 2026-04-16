@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-5 g-4">
+    <!-- Main Content Left -->
+    <div class="col-lg-8">
+        <!-- Hero Header -->
+        <div class="glass-panel overflow-hidden mb-4 rounded-4 border-0">
+            <div class="p-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="badge rounded-pill badge-category px-4 py-2 fs-6 shadow-sm border border-primary"><i class="fa-solid fa-tag me-2"></i>{{ recipe.category or '未分類' }}</span>
+                    {% if session.get('is_admin') %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical px-1"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-end glass-panel border-0 shadow mt-2">
+                            <li><a class="dropdown-item fw-bold text-white px-3 py-2" href="{{ url_for('recipe.edit_recipe', id=recipe.id) }}"><i class="fa-solid fa-pen text-primary me-3"></i>編輯食譜</a></li>
+                            <li><hr class="dropdown-divider border-secondary my-1"></li>
+                            <li>
+                                <form action="{{ url_for('recipe.delete_recipe', id=recipe.id) }}" method="POST" onsubmit="return confirm('確定要刪除這份食譜嗎？此動作不可回復。');">
+                                    <button type="submit" class="dropdown-item fw-bold text-danger px-3 py-2 bg-transparent"><i class="fa-solid fa-trash me-3"></i>刪除食譜</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <h1 class="display-4 fw-bold mb-3 lh-sm text-white">{{ recipe.title }}</h1>
+                <p class="fs-5 text-muted mb-0 lh-base opacity-75" style="white-space: pre-wrap;">{{ recipe.description }}</p>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="glass-panel p-4 p-md-5 rounded-4 border-0 mb-4 position-relative">
+            <h3 class="fw-bold mb-4 text-white d-flex align-items-center"><div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-3" style="width: 32px; height: 32px;"><i class="fa-solid fa-fire-burner fs-6 text-white"></i></div> 烹飪步驟</h3>
+            <div class="fs-5 text-main lh-lg ps-4 border-start border-3 border-primary pt-2 pb-2" style="white-space: pre-wrap; font-weight: 300;">{{ recipe.instructions }}</div>
+            
+            <!-- Timer Component -->
+            <div class="mt-5 p-4 rounded-4 shadow-sm" style="background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(15,23,42,0)); border-left: 4px solid var(--primary-color);">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-stopwatch-20 fs-2 text-primary me-3"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1 text-white">智慧計時器</h5>
+                            <span class="small text-muted">掌控精確火候</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 py-2 px-3 rounded-pill">
+                        <input type="number" id="timerMinutes" class="form-control border-0 rounded-pill text-center bg-transparent text-white fw-bold shadow-none" style="width: 70px;" placeholder="分鐘" min="1">
+                        <button class="btn btn-primary rounded-pill px-3 fw-bold shadow-sm" id="btnStartTimer">開始 <i class="fa-solid fa-play ms-1 fs-xs"></i></button>
+                        <span id="timerDisplay" class="fs-3 fw-bold font-monospace ms-3 text-primary text-shadow pe-2 d-inline-block" style="min-width: 90px;">00:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Right -->
+    <div class="col-lg-4">
+        <!-- Action Card -->
+        <div class="glass-panel p-4 mb-4 text-center border-0 rounded-4 shadow position-relative overflow-hidden">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="position-relative z-index-1">
+                <form action="{{ url_for('collection.save_recipe', id=recipe.id) }}" method="POST">
+                    <button type="submit" class="btn btn-primary w-100 py-3 mb-2 shadow-sm fs-5 fw-bold rounded-pill">
+                        <i class="fa-solid fa-bookmark me-2"></i>加上書籤收藏
+                    </button>
+                </form>
+                <span class="small text-muted">隨時在「我的收藏」裡重溫</span>
+            </div>
+        </div>
+        
+        <!-- Ingredients Card -->
+        <div class="glass-panel p-4 pb-3 rounded-4 border-0">
+            <h4 class="fw-bold mb-4 text-white d-flex align-items-center"><div class="rounded-circle bg-warning d-flex justify-content-center align-items-center me-3" style="width: 32px; height: 32px;"><i class="fa-solid fa-carrot fs-6 text-dark"></i></div>材料清單</h4>
+            <form action="{{ url_for('collection.add_to_checklist') }}" method="POST">
+                <ul class="list-group list-group-flush mb-4 bg-transparent border-0 gap-2">
+                    {% for item in ingredients %}
+                    <li class="list-group-item bg-dark bg-opacity-25 border border-secondary rounded-3 text-white d-flex justify-content-between align-items-center py-3 px-3 shadow-sm transition-hover">
+                        <div class="form-check m-0">
+                            <input class="form-check-input mt-1 shadow-none" type="checkbox" name="ingredient_name[]" value="{{ item.name }}" id="ing_{{ loop.index }}" checked>
+                            <label class="form-check-label ps-2 fw-medium mt-0 pt-0" style="line-height: 1.5;" for="ing_{{ loop.index }}">
+                                {{ item.name }}
+                            </label>
+                            <input type="hidden" name="ingredient_amount[]" value="{{ item.amount }}">
+                        </div>
+                        <span class="badge bg-secondary bg-opacity-50 text-white border border-secondary rounded-pill px-3 py-2 fw-bold fs-6 ms-2">{{ item.amount }}</span>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item bg-transparent text-muted px-0 border-0 text-center py-4">未登錄任何食材</li>
+                    {% endfor %}
+                </ul>
+                {% if ingredients %}
+                <button type="submit" class="btn btn-outline-light w-100 rounded-pill py-2 shadow-sm d-flex align-items-center justify-content-center fw-bold text-white mb-2">
+                    <i class="fa-solid fa-cart-plus me-2"></i>批次加入準備清單
+                </button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

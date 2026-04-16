@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center pt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="glass-panel p-5 overflow-hidden position-relative">
+            <div class="position-absolute top-0 end-0 w-100 h-100" style="background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.1), transparent 50%); z-index: 0; pointer-events: none;"></div>
+            
+            <div class="position-relative z-index-1">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 mb-3" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-right-to-bracket fs-2 text-primary"></i>
+                    </div>
+                    <h2 class="fw-bold fs-3">歡迎回來</h2>
+                    <p class="text-muted small">請輸入您的帳密登入系統</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="loginUser" name="username" placeholder="Username" required autocomplete="off">
+                        <label for="loginUser" class="text-muted"><i class="fa-solid fa-user me-2"></i>使用者帳號</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="loginPass" name="password" placeholder="Password" required>
+                        <label for="loginPass" class="text-muted"><i class="fa-solid fa-lock me-2"></i>密碼</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 shadow mb-3 fs-5">立即登入</button>
+                    <p class="text-center text-muted small">還沒有帳號嗎？ <a href="{{ url_for('auth.register') }}" class="text-primary text-decoration-none fw-bold border-bottom border-primary pb-1">點此註冊</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center pt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="glass-panel p-5 overflow-hidden position-relative">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.1), transparent 50%); z-index: 0; pointer-events: none;"></div>
+            
+            <div class="position-relative z-index-1">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 mb-3" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-user-plus fs-2 text-primary"></i>
+                    </div>
+                    <h2 class="fw-bold fs-3">加入 FlavorVault</h2>
+                    <p class="text-muted small">開啟你的私人專屬美食圖鑑</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="regUser" name="username" placeholder="Username" required autocomplete="off">
+                        <label for="regUser" class="text-muted"><i class="fa-solid fa-at me-2"></i>使用者帳號</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="regPass" name="password" placeholder="Password" required>
+                        <label for="regPass" class="text-muted"><i class="fa-solid fa-lock me-2"></i>設定密碼</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="regConfirm" name="confirm_password" placeholder="Confirm" required>
+                        <label for="regConfirm" class="text-muted"><i class="fa-solid fa-key me-2"></i>確認密碼</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 shadow mb-3 fs-5">註冊帳號</button>
+                    <p class="text-center text-muted small">已經有帳號了嗎？ <a href="{{ url_for('auth.login') }}" class="text-primary text-decoration-none fw-bold border-bottom border-primary pb-1">點此登入</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

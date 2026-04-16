@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-5 text-center mt-3 position-relative">
+    <div class="position-absolute start-50 translate-middle-x rounded-circle" style="width: 150px; height: 150px; background: rgba(236,72,153,0.3); filter: blur(30px); top:-50px; z-index:-1;"></div>
+    <h2 class="display-6 fw-bold mb-3"><i class="fa-solid fa-bookmark text-secondary me-2"></i>我的收藏秘笈</h2>
+    <p class="text-muted fs-5">這裡記錄了您保存下來的所有食譜，隨時都能調閱。</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for recipe in recipes %}
+    <div class="col">
+        <!-- Relative position structure allows absolute positioning of remove button nicely inside the card -->
+        <div class="position-relative h-100">
+            <a href="{{ url_for('recipe.detail', id=recipe.id) }}" class="text-decoration-none h-100 d-block">
+                <div class="card h-100 glass-panel recipe-card border-secondary rounded-4">
+                    <div class="card-body p-4 d-flex flex-column h-100">
+                        <div class="mb-3 d-flex align-items-center gap-2">
+                            <span class="badge bg-primary bg-opacity-25 text-primary border border-primary px-3 py-1 rounded-pill">{{ recipe.category or '未分類' }}</span>
+                        </div>
+                        <h4 class="card-title fw-bold text-white lh-base">{{ recipe.title }}</h4>
+                        <p class="card-text text-muted small mt-2 flex-grow-1">{{ recipe.description|truncate(60, True, '...') }}</p>
+                    </div>
+                </div>
+            </a>
+            <!-- Remove Button -->
+            <form action="{{ url_for('collection.remove_recipe', id=recipe.id) }}" method="POST" class="position-absolute top-0 end-0 p-3" style="z-index: 2;">
+                <button type="submit" class="btn btn-dark bg-opacity-75 rounded-circle border border-secondary shadow-sm text-danger d-flex align-items-center justify-content-center p-0 hover-lift" style="width: 36px; height: 36px;" title="移除收藏" onclick="return confirm('確定移除收藏？');">
+                    <i class="fa-solid fa-heart-crack fs-6"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 py-5 text-center mt-4">
+        <div class="glass-panel d-inline-block p-5 text-muted rounded-4 shadow">
+            <div class="bg-dark bg-opacity-50 rounded-circle d-inline-flex justify-content-center align-items-center mb-4" style="width: 80px; height: 80px;">
+                <i class="fa-regular fa-folder-open fs-1 opacity-75"></i>
+            </div>
+            <h4 class="fw-bold mb-3 text-white">您的收藏匣空空如也</h4>
+            <p>去探索看看有哪些想嘗試的美味料理吧！</p>
+            <a href="{{ url_for('recipe.index') }}" class="btn btn-primary mt-3 rounded-pill px-4 py-2 shadow fw-bold">開始探索食譜</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
